@@ -25,6 +25,7 @@ public class Car2 implements Comparable<Car2> {
     public int getMileage() { return mileage; }
     public double getPrice() { return price; }
     public CarType getType() { return type; }
+    public String getVin() {return vin;}
 
     @Override
     public boolean equals(Object o) {
@@ -49,4 +50,5 @@ public class Car2 implements Comparable<Car2> {
     public int compareTo(Car2 o) {
         return Integer.compare(o.year, this.year);
     }
+
 }

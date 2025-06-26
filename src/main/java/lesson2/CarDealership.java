@@ -2,12 +2,22 @@ package lesson2;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CarDealership {
-    private final Set<Car2> cars = new HashSet<>();
+    private final List<Car2> cars = new ArrayList<>();
 
     public boolean addCar(Car2 car) {
-        return cars.add(car);
+        if (!containsVin(car.getVin())) {
+            cars.add(car);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean containsVin(String vin) {
+        return cars.stream().anyMatch(car -> car.getVin().equals(vin));
     }
 
     public List<Car2> findCarsByManufacturer(String manufacturer) {

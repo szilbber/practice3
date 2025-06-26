@@ -2,11 +2,13 @@ package lesson2;
 
 import java.util.*;
 import java.util.OptionalDouble;
+import java.util.*;
 
 public class CarDealershipApp {
     public static void main(String[] args) {
         CarDealership dealership = new CarDealership();
 
+        // Добавляем тестовые данные
         dealership.addCar(new Car2("V123", "Camry", "Toyota", 2020, 45000, 20000, CarType.SEDAN));
         dealership.addCar(new Car2("V456", "Model S", "Tesla", 2022, 15000, 90000, CarType.ELECTRIC));
         dealership.addCar(new Car2("V789", "X5", "BMW", 2019, 30000, 50000, CarType.SUV));
@@ -28,8 +30,13 @@ public class CarDealershipApp {
             System.out.println("0. Выход");
 
             System.out.print("Выберите действие: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            int choice;
+            try {
+                choice = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Неверный ввод.");
+                continue;
+            }
 
             switch (choice) {
                 case 1:
@@ -38,14 +45,20 @@ public class CarDealershipApp {
                     break;
 
                 case 2:
-                    System.out.print("Введите VIN: "); String vin = scanner.nextLine();
-                    System.out.print("Модель: "); String model = scanner.nextLine();
-                    System.out.print("Производитель: "); String manufacturer = scanner.nextLine();
-                    System.out.print("Год выпуска: "); int year = scanner.nextInt();
-                    System.out.print("Пробег: "); int mileage = scanner.nextInt();
-                    System.out.print("Цена: "); double price = scanner.nextDouble();
-                    System.out.println("Тип (SEDAN, SUV, ELECTRIC и т.д.): ");
-                    CarType type = CarType.valueOf(scanner.next().toUpperCase());
+                    System.out.print("Введите VIN: ");
+                    String vin = scanner.nextLine();
+                    System.out.print("Модель: ");
+                    String model = scanner.nextLine();
+                    System.out.print("Производитель: ");
+                    String manufacturer = scanner.nextLine();
+                    System.out.print("Год выпуска: ");
+                    int year = Integer.parseInt(scanner.nextLine());
+                    System.out.print("Пробег: ");
+                    int mileage = Integer.parseInt(scanner.nextLine());
+                    System.out.print("Цена: ");
+                    double price = Double.parseDouble(scanner.nextLine());
+                    System.out.print("Тип (SEDAN, SUV, ELECTRIC и т.д.): ");
+                    CarType type = CarType.valueOf(scanner.nextLine().toUpperCase());
 
                     boolean added = dealership.addCar(new Car2(vin, model, manufacturer, year, mileage, price, type));
                     System.out.println(added ? "Машина добавлена." : "Ошибка: машина с таким VIN уже существует.");
@@ -53,14 +66,14 @@ public class CarDealershipApp {
 
                 case 3:
                     System.out.print("Введите производителя: ");
-                    String manuf = scanner.next();
+                    String manuf = scanner.nextLine();
                     System.out.println("\nМашины производителя " + manuf + ":");
                     dealership.findCarsByManufacturer(manuf).forEach(System.out::println);
                     break;
 
                 case 4:
                     System.out.print("Введите тип машины (например, SUV): ");
-                    CarType typeInput = CarType.valueOf(scanner.next().toUpperCase());
+                    CarType typeInput = CarType.valueOf(scanner.nextLine().toUpperCase());
                     OptionalDouble avg = dealership.averagePriceByType(typeInput);
                     if (avg.isPresent()) {
                         System.out.printf("Средняя цена для %s: %.2f$\n", typeInput, avg.getAsDouble());
