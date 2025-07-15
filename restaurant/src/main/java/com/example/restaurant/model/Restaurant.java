@@ -25,6 +25,5 @@ public class Restaurant {
 
     @NonNull
     private Integer averageCheck;
-    @NonNull
     private BigDecimal rating;
 }
