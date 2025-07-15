@@ -8,6 +8,7 @@ import com.example.restaurant.repository.RestaurantRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -54,15 +55,7 @@ public class ReviewService {
         }
 
         if (restaurantToUpdate != null) {
-            Restaurant updated = new Restaurant(
-                    restaurantToUpdate.getId(),
-                    restaurantToUpdate.getName(),
-                    restaurantToUpdate.getDescription(),
-                    restaurantToUpdate.getCuisineType(),
-                    restaurantToUpdate.getAverageCheck(),
-                    BigDecimal.valueOf(average)
-            );
-            restaurantRepository.save(updated);
+            restaurantToUpdate.setRating(BigDecimal.valueOf(average));
         }
     }
 }

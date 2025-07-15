@@ -43,6 +43,10 @@ public class AppStartupRunner {
         restaurantService.save(restaurant1);
         restaurantService.save(restaurant2);
 
+        System.out.println("\n--- Все рестораны с начальной оценкой---");
+        restaurantService.findAll().forEach(r ->
+                System.out.println("Ресторан: " + r.getName() + ", Рейтинг: " + r.getRating()));
+
         Review review1 = new Review(1L, visitor1.getId(), restaurant1.getId(), 5, "Великолепная пицца!");
         Review review2 = new Review(2L, visitor2.getId(), restaurant1.getId(), 4, "Хорошо, но дорого");
         Review review3 = new Review(3L, visitor2.getId(), restaurant2.getId(), 5, "Отличные суши");
@@ -51,10 +55,6 @@ public class AppStartupRunner {
         reviewService.save(review2);
         reviewService.save(review3);
 
-        System.out.println("\n--- Все рестораны ---");
-        restaurantService.findAll().forEach(r ->
-                System.out.println("Ресторан: " + r.getName() + ", Рейтинг: " + r.getRating()));
-
         System.out.println("\n--- Все посетители ---");
         visitorService.findAll().forEach(v ->
                 System.out.println("Имя: " + v.getName() + ", Возраст: " + v.getAge()));
@@ -62,5 +62,9 @@ public class AppStartupRunner {
         System.out.println("\n--- Все отзывы ---");
         reviewService.findAll().forEach(r ->
                 System.out.println("Оценка: " + r.getRating() + ", Текст: " + r.getText()));
+
+        System.out.println("\n--- Все рестораны с обновленной оценкой---");
+        restaurantService.findAll().forEach(r ->
+                System.out.println("Ресторан: " + r.getName() + ", Рейтинг: " + r.getRating()));
     }
 }
