@@ -14,6 +14,7 @@ public class Visitor {
 
     private String name;
 
+    @NonNull
     private int age;
 
     @NonNull

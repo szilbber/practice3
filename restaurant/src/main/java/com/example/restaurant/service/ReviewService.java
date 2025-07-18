@@ -1,61 +1,56 @@
 package com.example.restaurant.service;
 
-import com.example.restaurant.model.Restaurant;
-import org.springframework.stereotype.Service;
+import com.example.restaurant.dto.ReviewRequestDTO;
+import com.example.restaurant.dto.ReviewResponseDTO;
+import com.example.restaurant.mapper.ReviewMapper;
 import com.example.restaurant.model.Review;
 import com.example.restaurant.repository.ReviewRepository;
-import com.example.restaurant.repository.RestaurantRepository;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final RestaurantRepository restaurantRepository;
+    private final ReviewMapper reviewMapper;
 
-    public void save(Review review) {
-        reviewRepository.save(review);
-        updateAverageRating(review.getRestaurantId());
+    @Transactional
+    public ReviewResponseDTO save(ReviewRequestDTO dto) {
+        Review review = reviewMapper.toEntity(dto);
+        return reviewMapper.toResponseDTO(reviewRepository.save(review));
     }
 
-    public boolean remove(Review review) {
-        boolean removed = reviewRepository.remove(review);
-        if (removed) {
-            updateAverageRating(review.getRestaurantId());
-        }
-        return removed;
+    public List<ReviewResponseDTO> findAll() {
+        return reviewRepository.findAll().stream()
+                .map(reviewMapper::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
-    public List<Review> findAll() {
-        return reviewRepository.findAll();
+    public ReviewResponseDTO findById(Long id) {
+        return reviewRepository.findById(id)
+                .map(reviewMapper::toResponseDTO)
+                .orElseThrow(() -> new RuntimeException("Отзыв не найден"));
     }
 
-    private void updateAverageRating(Long restaurantId) {
-        List<Review> reviews = reviewRepository.findAll().stream()
-                .filter(r -> r.getRestaurantId().equals(restaurantId))
-                .toList();
+    @Transactional
+    public ReviewResponseDTO update(Long id, ReviewRequestDTO dto) {
+        Review existing = reviewRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Отзыв не найден"));
 
-        double average = reviews.stream()
-                .mapToInt(Review::getRating)
-                .average()
-                .orElse(0.0);
+        existing.setVisitorId(dto.getVisitorId());
+        existing.setRestaurantId(dto.getRestaurantId());
+        existing.setRating(dto.getRating());
+        existing.setText(dto.getText());
 
-        Restaurant restaurantToUpdate = null;
-        for (Restaurant restaurant : restaurantRepository.findAll()) {
-            if (restaurant.getId().equals(restaurantId)) {
-                restaurantToUpdate = restaurant;
-                break;
-            }
-        }
+        return reviewMapper.toResponseDTO(reviewRepository.save(existing));
+    }
 
-        if (restaurantToUpdate != null) {
-            restaurantToUpdate.setRating(BigDecimal.valueOf(average));
-        }
+    public void deleteById(Long id) {
+        reviewRepository.deleteById(id);
     }
 }

@@ -7,30 +7,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import lombok.Getter;
-
-
-@Getter
 @Repository
 public class ReviewRepository {
 
     private final List<Review> reviews = new ArrayList<>();
 
-    public void save(Review review) {
-        reviews.add(review);
-    }
-
-    public boolean remove(Review review) {
-        return reviews.remove(review);
-    }
-
-    public Optional<Review> findById(Long id) {
-        return reviews.stream()
-                .filter(r -> r.getId().equals(id))
+    public Review save(Review review) {
+        Optional<Review> existing = reviews.stream()
+                .filter(r -> r.getId() != null && r.getId().equals(review.getId()))
                 .findFirst();
+
+        existing.ifPresent(reviews::remove);
+
+        reviews.add(review);
+        return review;
     }
 
     public List<Review> findAll() {
         return new ArrayList<>(reviews);
+    }
+
+    public Optional<Review> findById(Long id) {
+        return reviews.stream()
+                .filter(r -> r.getId() != null && r.getId().equals(id))
+                .findFirst();
+    }
+
+    public void deleteById(Long id) {
+        reviews.removeIf(r -> r.getId() != null && r.getId().equals(id));
     }
 }
