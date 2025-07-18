@@ -25,52 +25,36 @@ public class ReviewController {
     }
 
     @GetMapping
-    @Operation(
-            summary = "Получить все отзывы",
-            description = "Возвращает список всех отзывов о ресторанах",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Список отзывов успешно загружен", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReviewResponseDTO.class)))
-            }
-    )
+    @Operation(summary = "Получить все отзывы", description = "Возвращает список всех отзывов о ресторанах")
+    @ApiResponse(responseCode = "200", description = "Список отзывов успешно загружен",
+            content = @Content(schema = @Schema(implementation = ReviewResponseDTO.class)))
     public List<ReviewResponseDTO> getAll() {
         return reviewService.findAll();
     }
 
     @GetMapping("/{id}")
-    @Operation(
-            summary = "Получить отзыв по ID",
-            description = "Возвращает один отзыв по указанному ID",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Отзыв найден", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReviewResponseDTO.class))),
-                    @ApiResponse(responseCode = "404", description = "Отзыв не найден")
-            }
-    )
+    @Operation(summary = "Получить отзыв по ID", description = "Возвращает один отзыв по указанному ID")
+    @ApiResponse(responseCode = "200", description = "Отзыв найден",
+            content = @Content(schema = @Schema(implementation = ReviewResponseDTO.class)))
+    @ApiResponse(responseCode = "404", description = "Отзыв не найден")
     public ReviewResponseDTO getById(
             @Parameter(description = "ID отзыва", example = "1") @PathVariable Long id) {
         return reviewService.findById(id);
     }
 
     @PostMapping
-    @Operation(
-            summary = "Создать новый отзыв",
-            description = "Создаёт новый отзыв о ресторане от посетителя",
-            responses = {
-                    @ApiResponse(responseCode = "201", description = "Отзыв успешно создан", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReviewResponseDTO.class)))
-            }
-    )
+    @Operation(summary = "Создать новый отзыв", description = "Создаёт новый отзыв на основе переданных данных")
+    @ApiResponse(responseCode = "201", description = "Отзыв успешно создан",
+            content = @Content(schema = @Schema(implementation = ReviewResponseDTO.class)))
     public ReviewResponseDTO create(@RequestBody ReviewRequestDTO dto) {
         return reviewService.save(dto);
     }
 
     @PutMapping("/{id}")
-    @Operation(
-            summary = "Обновить отзыв",
-            description = "Обновляет существующий отзыв по ID",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Отзыв успешно обновлён", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReviewResponseDTO.class))),
-                    @ApiResponse(responseCode = "404", description = "Отзыв не найден")
-            }
-    )
+    @Operation(summary = "Обновить отзыв", description = "Обновляет существующий отзыв по ID")
+    @ApiResponse(responseCode = "200", description = "Отзыв успешно обновлён",
+            content = @Content(schema = @Schema(implementation = ReviewResponseDTO.class)))
+    @ApiResponse(responseCode = "404", description = "Отзыв не найден")
     public ReviewResponseDTO update(
             @PathVariable Long id,
             @RequestBody ReviewRequestDTO dto) {
@@ -78,13 +62,8 @@ public class ReviewController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(
-            summary = "Удалить отзыв",
-            description = "Удаляет отзыв по указанному ID",
-            responses = {
-                    @ApiResponse(responseCode = "204", description = "Отзыв успешно удалён")
-            }
-    )
+    @Operation(summary = "Удалить отзыв", description = "Удаляет отзыв по указанному ID")
+    @ApiResponse(responseCode = "204", description = "Отзыв успешно удалён")
     public void delete(@PathVariable Long id) {
         reviewService.deleteById(id);
     }

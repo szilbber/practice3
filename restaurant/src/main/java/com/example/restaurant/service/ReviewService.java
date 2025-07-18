@@ -4,7 +4,9 @@ import com.example.restaurant.dto.ReviewRequestDTO;
 import com.example.restaurant.dto.ReviewResponseDTO;
 import com.example.restaurant.mapper.ReviewMapper;
 import com.example.restaurant.model.Review;
+import com.example.restaurant.repository.RestaurantRepository;
 import com.example.restaurant.repository.ReviewRepository;
+import com.example.restaurant.repository.VisitorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,39 +15,40 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ReviewService {
 
+    private final VisitorRepository visitorRepository;
+    private final RestaurantRepository restaurantRepository;
     private final ReviewRepository reviewRepository;
     private final ReviewMapper reviewMapper;
-
-    @Transactional
-    public ReviewResponseDTO save(ReviewRequestDTO dto) {
-        Review review = reviewMapper.toEntity(dto);
-        return reviewMapper.toResponseDTO(reviewRepository.save(review));
-    }
 
     public List<ReviewResponseDTO> findAll() {
         return reviewRepository.findAll().stream()
                 .map(reviewMapper::toResponseDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public ReviewResponseDTO findById(Long id) {
-        return reviewRepository.findById(id)
-                .map(reviewMapper::toResponseDTO)
-                .orElseThrow(() -> new RuntimeException("Отзыв не найден"));
+        return reviewMapper.toResponseDTO(
+                reviewRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Отзыв не найден"))
+        );
     }
 
-    @Transactional
+    public ReviewResponseDTO save(ReviewRequestDTO dto) {
+        return reviewMapper.toResponseDTO(reviewRepository.save(reviewMapper.toEntity(dto)));
+    }
+
     public ReviewResponseDTO update(Long id, ReviewRequestDTO dto) {
         Review existing = reviewRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Отзыв не найден"));
 
-        existing.setVisitorId(dto.getVisitorId());
-        existing.setRestaurantId(dto.getRestaurantId());
         existing.setRating(dto.getRating());
         existing.setText(dto.getText());
+        existing.setVisitor(visitorRepository.findById(dto.getVisitorId()).orElseThrow());
+        existing.setRestaurant(restaurantRepository.findById(dto.getRestaurantId()).orElseThrow());
 
         return reviewMapper.toResponseDTO(reviewRepository.save(existing));
     }

@@ -27,7 +27,7 @@ public class RestaurantMapper {
                 restaurant.getId(),
                 restaurant.getName(),
                 restaurant.getDescription(),
-                restaurant.getCuisineType().toString(),
+                restaurant.getCuisineType() != null ? restaurant.getCuisineType().toString() : null,
                 restaurant.getAverageCheck(),
                 restaurant.getRating() != null ? restaurant.getRating().doubleValue() : null
         );
