@@ -22,6 +22,17 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.7.3</version> <!-- Проверь актуальную версию -->
+			<scope>runtime</scope>
+		</dependency>
+		<!-- Data JPA -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
 		<!-- Springdoc OpenAPI UI -->
 		<dependency>
 			<groupId>org.springdoc</groupId>

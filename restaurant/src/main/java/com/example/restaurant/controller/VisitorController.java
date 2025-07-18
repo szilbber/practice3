@@ -2,9 +2,9 @@ package com.example.restaurant.controller;
 
 import com.example.restaurant.dto.VisitorRequestDTO;
 import com.example.restaurant.dto.VisitorResponseDTO;
-import com.example.restaurant.model.Visitor;
 import com.example.restaurant.service.VisitorService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,7 +34,8 @@ public class VisitorController {
     @Operation(summary = "Получить посетителя по ID", description = "Возвращает одного посетителя по указанному ID")
     @ApiResponse(responseCode = "200", description = "Посетитель найден",
             content = @Content(schema = @Schema(implementation = VisitorResponseDTO.class)))
-    public VisitorResponseDTO getById(@PathVariable Long id) {
+    public VisitorResponseDTO getById(
+            @Parameter(description = "ID посетителя", example = "1") @PathVariable Long id) {
         return visitorService.findById(id);
     }
 
@@ -50,7 +51,9 @@ public class VisitorController {
     @Operation(summary = "Обновить посетителя", description = "Обновляет данные существующего посетителя")
     @ApiResponse(responseCode = "200", description = "Посетитель успешно обновлён",
             content = @Content(schema = @Schema(implementation = VisitorResponseDTO.class)))
-    public VisitorResponseDTO update(@PathVariable Long id, @RequestBody VisitorRequestDTO dto) {
+    public VisitorResponseDTO update(
+            @PathVariable Long id,
+            @RequestBody VisitorRequestDTO dto) {
         return visitorService.update(id, dto);
     }
 
@@ -58,8 +61,6 @@ public class VisitorController {
     @Operation(summary = "Удалить посетителя", description = "Удаляет посетителя по указанному ID")
     @ApiResponse(responseCode = "204", description = "Посетитель успешно удалён")
     public void delete(@PathVariable Long id) {
-        Visitor visitor = new Visitor();
-        visitor.setId(id);
-        visitorService.remove(visitor);
+        visitorService.deleteById(id);
     }
 }
