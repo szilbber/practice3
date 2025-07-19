@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -60,6 +61,7 @@ public class RestaurantController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Удалить ресторан", description = "Удаляет ресторан по указанному ID")
     @ApiResponse(responseCode = "204", description = "Ресторан успешно удалён")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRestaurant(@PathVariable Long id) {
         restaurantService.deleteById(id);
     }
