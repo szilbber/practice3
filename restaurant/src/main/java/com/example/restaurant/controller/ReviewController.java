@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -64,6 +65,7 @@ public class ReviewController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Удалить отзыв", description = "Удаляет отзыв по указанному ID")
     @ApiResponse(responseCode = "204", description = "Отзыв успешно удалён")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         reviewService.deleteById(id);
     }
